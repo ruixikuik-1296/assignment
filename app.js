@@ -86,9 +86,8 @@ async function getCoinId(input) {
         return match?.id || null;
 
     } catch (err) {
-        console.error(err);
-        return null;
-    }
+    throw err;
+}
 }
 // GET PRICE + CHART
 async function getPrice() {
@@ -143,9 +142,25 @@ async function getPrice() {
         drawChart(labels, values);
 
     } catch (error) {
-        console.error(error);
-        showModal("❌ Failed to load data");
+
+    if (error.message === "RATE_LIMIT") {
+        showModal("⚠️ API rate limit hit, wait a few seconds");
+        return;
     }
+
+    if (error.message === "NETWORK_FAIL") {
+        showModal("🌐 Request failed (network or API unavailable)");
+        return;
+    }
+
+    if (error.message === "HTTP_ERROR") {
+        showModal("⚠️ Server error");
+        return;
+    }
+
+    console.error(error);
+    showModal("❌ Failed to load data");
+}
 }
 
 // DRAW CHART
