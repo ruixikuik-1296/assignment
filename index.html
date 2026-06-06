@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Crypto Dashboard</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- MENU BUTTON -->
+<button class="menu-btn" onclick="toggleSidebar()">☰</button>
+
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <h2>Crypto Panel</h2>
+
+    <button onclick="showSection('search')">Search</button>
+    <button onclick="showSection('portfolio')">Portfolio</button>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- SEARCH VIEW -->
+    <div id="search" class="section">
+
+      <h1>Crypto Price Checker</h1>
+
+      <!-- SEARCH BOX -->
+      <div class="search-box">
+        <input id="coin" placeholder="bitcoin / ethereum">
+        <button onclick="getPrice()">Search</button>
+      </div>
+
+      <!-- PRICE CARD -->
+        <!-- ROW 1: PRICE -->
+<div class="price-row">
+  <span id="coinName"></span>
+  <span>Price:</span>
+  <span id="priceValue"></span>
+
+  <span class="currency-wrap">
+    <select id="currencySelect">
+      <option value="usd">USD</option>
+      <option value="myr">MYR</option>
+      <option value="eur">EUR</option>
+    </select>
+  </span>
+</div>
+
+      <!-- RESULT BOX -->
+<div id="result" class="result-box"></div>
+
+</div>
+
+      <!-- CHART -->
+      <canvas id="chart"></canvas>
+
+    </div>
+
+    <!-- PORTFOLIO VIEW -->
+    <div id="portfolio" class="section hidden">
+
+      <h1>My Portfolio</h1>
+
+      <input id="pCoin" placeholder="coin (bitcoin)">
+      <input id="pAmount" placeholder="amount">
+      <input id="pBuyPrice" placeholder="buy price (per coin)">
+
+      <button onclick="addAsset()">Add</button>
+      <button onclick="clearPortfolio()">Clear Portfolio</button>
+
+      <div id="portfolioList"></div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- MODAL -->
+<div id="modal" class="modal hidden">
+  <div class="modal-box" id="modalText"></div>
+</div>
+
+<!-- JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
