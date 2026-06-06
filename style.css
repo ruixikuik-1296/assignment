@@ -97,17 +97,19 @@ button:hover {
 }
 
 /* CHART */
-canvas {
+.chart-container {
+  width: 100%;
+  max-width: 800px;
+
+  height: 380px;   /* ⭐关键：限制高度 */
   margin: 30px auto;
+
+  position: relative;
+}
+
+canvas {
   width: 100% !important;
-  height: 420px !important;
-  display: block;
-
-  background: rgba(15,15,25,0.6);
-  border-radius: 12px;
-
-  padding: 10px;
-  box-shadow: 0 0 25px rgba(0,245,255,0.08);
+  height: 100% !important;  /* ⭐填满容器 */
 }
 
 /* MODAL */

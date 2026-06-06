@@ -155,22 +155,32 @@ function drawChart(labels, values) {
 
     if (chart) chart.destroy();
 
+    const isMobile = window.innerWidth < 768;
+
     chart = new Chart(ctx, {
-    type: "line",
-    data: {
-        labels,
-        datasets: [{
-            label: `Price (${currency.toUpperCase()})`,
-            data: values,
-            borderColor: "blue",
-            fill: false
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false
-    }
-});
+        type: "line",
+        data: {
+            labels,
+            datasets: [{
+                label: `Price (${currency.toUpperCase()})`,
+                data: values,
+                borderColor: "blue",
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true
+                }
+            }
+        }
+    });
+
+    // 👇 关键：动态控制高度
+    const canvas = document.getElementById("chart");
 }
 
 // ADD ASSET
