@@ -2,6 +2,11 @@ let chart = null;
 let portfolio = JSON.parse(localStorage.getItem("portfolio")) || [];
 let lastCall = 0;
 let currency = localStorage.getItem("currency") || "usd";
+let fx = {
+    usd: 1,
+    myr: 4.7,
+    eur: 0.92
+};
 
 // RATE LIMIT CONTROL
 function canCallAPI() {
@@ -218,7 +223,7 @@ async function addAsset() {
             return;
         }
 
-        portfolio.push({ coin, amount, buyPrice });
+        portfolio.push({ coin, amount, buyPriceUSD: buyPrice  });
         localStorage.setItem("portfolio", JSON.stringify(portfolio));
 
         renderPortfolio();
@@ -254,8 +259,12 @@ async function renderPortfolio() {
 
             if (!currentPrice) continue;
 
+            const fxRate = fx[currency];
+
+            const buyPrice = item.buyPriceUSD * fxRate;
+
             const valueNow = currentPrice * item.amount;
-            const cost = item.buyPrice * item.amount;
+            const cost = buyPrice * item.amount;
             const profit = valueNow - cost;
 
             const div = document.createElement("div");
@@ -263,7 +272,7 @@ async function renderPortfolio() {
             div.innerHTML = `
                 <b>${item.coin.toUpperCase()}</b><br>
                 Amount: ${item.amount}<br>
-                Buy Price: ${item.buyPrice} ${currency.toUpperCase()}<br>
+                Buy Price: ${buyPrice.toFixed(2)} ${currency.toUpperCase()}<br>
                 Current Price: ${currentPrice} ${currency.toUpperCase()}<br><br>
 
                 Value: ${valueNow.toFixed(2)} ${currency.toUpperCase()}<br>
@@ -347,35 +356,89 @@ function showModal(message) {
 // INIT
 document.addEventListener("DOMContentLoaded", () => {
 
-    const selector = document.getElementById("currencySelect");
+    const init = async () => {
 
-    // set initial value
-    selector.value = currency;
+        await updateFXRates(); // ⭐ 这里 await
 
-    // bind event ONCE
-    selector.addEventListener("change", (e) => {
-        currency = e.target.value;
+        const searchSelect = document.getElementById("currencySelect");
+        const portfolioSelect = document.getElementById("portfolioCurrencySelect");
 
-        localStorage.setItem("currency", currency);
+        if (!searchSelect) return;
+
+        // init UI
+        searchSelect.value = currency;
+        if (portfolioSelect) portfolioSelect.value = currency;
+
+        function setCurrency(newCurrency) {
+
+            if (currency === newCurrency) return;
+
+            currency = newCurrency;
+            localStorage.setItem("currency", currency);
+
+            updateCurrencyUI();
+
+            showModal("Currency → " + currency.toUpperCase());
+
+            const input = document.getElementById("coin")?.value?.trim();
+            if (input) getPrice();
+
+            renderPortfolio();
+        }
+
+        searchSelect.addEventListener("change", e => setCurrency(e.target.value));
+
+        if (portfolioSelect) {
+            portfolioSelect.addEventListener("change", e => setCurrency(e.target.value));
+        }
 
         updateCurrencyUI();
+        renderPortfolio();
+    };
 
-        showModal("Currency set to " + currency.toUpperCase());
-    });
-
-    updateCurrencyUI();
-    renderPortfolio();
+    init(); // ⭐ 关键：启动 async 初始化
 });
 
 function updateCurrencyUI() {
 
     const badge = document.getElementById("currencyBadge");
+
     if (badge) {
         badge.innerText = `Active Currency: ${currency.toUpperCase()}`;
     }
 
-    const selector = document.getElementById("currencySelect");
-    if (selector) {
-        selector.value = currency;
+    const search = document.getElementById("currencySelect");
+    const portfolio = document.getElementById("portfolioCurrencySelect");
+
+    if (search) search.value = currency;
+    if (portfolio) portfolio.value = currency;
+}
+
+async function updateFXRates() {
+    try {
+        const res = await fetch(
+            "https://api.fxratesapi.com/latest?base=USD&currencies=MYR,EUR"
+        );
+
+        if (!res || !res.ok) throw new Error("FX_FETCH_FAILED");
+
+        const data = await res.json();
+
+        console.log("FX API response:", data);
+
+        if (!data?.rates) throw new Error("FX_INVALID_DATA");
+
+        fx.usd = 1;
+        fx.myr = data.rates.MYR;
+        fx.eur = data.rates.EUR;
+
+        console.log("FX updated:", fx);
+
+    } catch (err) {
+        console.error("FX failed, fallback used", err);
+
+        fx.usd = 1;
+        fx.myr = 4.7;
+        fx.eur = 0.92;
     }
 }

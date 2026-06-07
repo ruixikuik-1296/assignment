@@ -100,16 +100,15 @@ button:hover {
 .chart-container {
   width: 100%;
   max-width: 800px;
-
-  height: 380px;   /* ⭐关键：限制高度 */
+  height: 380px;
   margin: 30px auto;
-
   position: relative;
 }
 
 canvas {
   width: 100% !important;
-  height: 100% !important;  /* ⭐填满容器 */
+  height: 100% !important;
+  display: block;
 }
 
 /* MODAL */
@@ -295,6 +294,44 @@ canvas {
   cursor: pointer;
 }
 
+.currency-panel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  margin: 15px 0;
+}
+
+/* label */
+.currency-panel span {
+  color: #00f5ff;
+  font-weight: bold;
+}
+
+/* dropdown */
+#portfolioCurrencySelect {
+  padding: 8px 12px;
+  border-radius: 8px;
+
+  background: rgba(20, 20, 30, 0.85);
+  color: #00f5ff;
+
+  border: 1px solid rgba(0, 245, 255, 0.3);
+
+  outline: none;
+  cursor: pointer;
+
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.1);
+
+  transition: 0.2s ease;
+}
+
+#portfolioCurrencySelect:hover {
+  box-shadow: 0 0 15px rgba(0, 245, 255, 0.25);
+  transform: scale(1.03);
+}
+
 @media (max-width: 768px) {
 
   body {
@@ -305,10 +342,7 @@ canvas {
     flex-direction: column;
   }
 
-  input {
-    width: 100%;
-  }
-
+  input,
   button {
     width: 100%;
   }
@@ -322,21 +356,15 @@ canvas {
     gap: 4px;
   }
 
-  canvas {
-    width: 100% !important;
-    height: auto !important;
-  }
-
   .currency-panel {
     flex-direction: column;
   }
 
-}
-
-@media (max-width: 768px) {
+  .chart-container {
+    height: 260px; /* ⭐ mobile 限高 */
+  }
 
   .sidebar {
     width: 70%;
   }
-
 }
