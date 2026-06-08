@@ -41,25 +41,29 @@
       <!-- PRICE CARD -->
         <!-- ROW 1: PRICE -->
       <div class="price-row">
-  <span id="coinName"></span>
-  <span>Currency:</span>
-  <span id="priceValue"></span>
+        <span id="coinName"></span>
+        <span>Currency:</span>
+        <span id="priceValue"></span>
 
-  <span class="currency-wrap">
-    <select id="currencySelect">
-      <option value="usd">USD</option>
-      <option value="myr">MYR</option>
-      <option value="eur">EUR</option>
-    </select>
-  </span>
+        <span class="currency-wrap">
+          <select id="currencySelect">
+            <option value="usd">USD</option>
+            <option value="myr">MYR</option>
+            <option value="eur">EUR</option>
+          </select>
+        </span>
       </div>
 
+      <div id="currencyBadge" class="currencyBadge"></div>
+      
       <!-- RESULT BOX -->
       <div id="result" class="result-box"></div>
 
       <div class="chart-container">
-  <canvas id="chart"></canvas>
+        <canvas id="chart"></canvas>
       </div>
+
+      <button onclick="resetZoom()" style="margin-top:8px;">Reset zoom</button>
 
     </div>
 
@@ -70,15 +74,15 @@
 
       <input id="pCoin" placeholder="coin (bitcoin)">
       <input id="pAmount" placeholder="amount">
-      <input id="pBuyPrice" placeholder="buy price (per coin)">
+      <input id="pBuyPrice" placeholder="buy price (per coin in USD)">
       </div>
       
       <div class="currency-panel">
         <span>Currency:</span>
         <select id="portfolioCurrencySelect">
-         <option value="usd">USD</option>
-         <option value="myr">MYR</option>
-         <option value="eur">EUR</option>
+          <option value="usd">USD</option>
+          <option value="myr">MYR</option>
+          <option value="eur">EUR</option>
         </select>
       </div>
 
@@ -100,6 +104,8 @@
 
 <!-- JS -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@1.2.1/dist/chartjs-plugin-zoom.min.js"></script>
 <script src="app.js"></script>
 
 </body>

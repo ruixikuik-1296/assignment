@@ -38,7 +38,7 @@ async function safeFetch(url) {
 
     } catch (err) {
 
-        // ⭐ 关键：区分 network fail
+        // ⭐ DIfferent network fail
         if (err instanceof TypeError) {
             throw new Error("NETWORK_FAIL");
         }
@@ -168,39 +168,98 @@ async function getPrice() {
 }
 }
 
+function calcSMA(values, period = 7) {
+  return values.map((_, i) => {
+    if (i < period - 1) return null;
+    const slice = values.slice(i - period + 1, i + 1);
+    return slice.reduce((a, b) => a + b, 0) / period;
+  });
+}
+
+function linearRegression(values) {
+  const n = values.length;
+  let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0;
+  values.forEach((y, x) => {
+    sumX += x;  sumY += y;
+    sumXY += x * y;  sumXX += x * x;
+  });
+  const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+  const intercept = (sumY - slope * sumX) / n;
+  return { slope, intercept };
+}
+
+function resetZoom() {
+    if (chart) chart.resetZoom();
+}
+
+function getCSSVar(name) {
+  return getComputedStyle(document.documentElement)
+    .getPropertyValue(name)
+    .trim();
+}
+
 // DRAW CHART
 function drawChart(labels, values) {
+  const ctx = document.getElementById("chart").getContext("2d");
+  if (chart) chart.destroy();
 
-    const ctx = document.getElementById("chart").getContext("2d");
+  // Build 3-day prediction from linear regression
+  const { slope, intercept } = linearRegression(values);
+  const predLabels = ["Day+1", "Day+2", "Day+3"];
+  const predValues = Array.from({ length: 3 }, (_, i) =>
+    slope * (values.length + i) + intercept
+  );
 
-    if (chart) chart.destroy();
+  // Extend both label and data arrays
+  const allLabels = [...labels, ...predLabels];
+  const historicData = [...values, null, null, null];
+  const predData = [
+    ...new Array(values.length - 1).fill(null),
+    values[values.length - 1],
+    ...predValues
+  ];
 
-    const isMobile = window.innerWidth < 768;
-
-    chart = new Chart(ctx, {
-        type: "line",
-        data: {
-            labels,
-            datasets: [{
-                label: `Price (${currency.toUpperCase()})`,
-                data: values,
-                borderColor: "blue",
-                fill: false
-            }]
+  chart = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: allLabels,
+      datasets: [
+        {
+          label: `Price (${currency.toUpperCase()})`,
+          data: historicData,
+          borderColor: "#00f5ff",
+          fill: false
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: true
-                }
-            }
+        {
+          label: "7-day SMA",
+          data: calcSMA(values, 7),
+          borderColor: "#ff6384",
+          borderDash: [4, 2],
+          fill: false,
+          pointRadius: 0
+        },
+        {
+          label: "Prediction (linear)",
+          data: predData,
+          borderColor: "#ff9f40",
+          borderDash: [6, 4],
+          fill: false,
+          pointRadius: 3
         }
-    });
-
-    // 👇 关键：动态控制高度
-    const canvas = document.getElementById("chart");
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: true },
+        zoom: {
+          zoom: { wheel: { enabled: true }, pinch: { enabled: true }, mode: "x" },
+          pan: { enabled: true, mode: "x" }
+        }
+      }
+    }
+  });
 }
 
 // ADD ASSET
@@ -246,7 +305,11 @@ async function renderPortfolio() {
         return;
     }
 
-    const ids = portfolio.map(i => i.coin).join(",");
+    const ids = [...new Set(
+        portfolio
+        .map(i => i.coin)
+        .filter(Boolean)
+        )].join(",");
 
     try {
         const data = await safeFetch(
@@ -396,7 +459,7 @@ document.addEventListener("DOMContentLoaded", () => {
         renderPortfolio();
     };
 
-    init(); // ⭐ 关键：启动 async 初始化
+    init(); 
 });
 
 function updateCurrencyUI() {
@@ -408,7 +471,9 @@ function updateCurrencyUI() {
     }
 
     const search = document.getElementById("currencySelect");
-    const portfolio = document.getElementById("portfolioCurrencySelect");
+    const portfolioSelect = document.getElementById("portfolioCurrencySelect");
+    if (portfolioSelect) portfolioSelect.value = currency;
+
 
     if (search) search.value = currency;
     if (portfolio) portfolio.value = currency;
