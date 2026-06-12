@@ -71,12 +71,17 @@ button:hover {
 }
 
 .price-row {
-  padding: 5px;
+  padding-top: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
+}
+
+.price-row span {
+  color: #00f5ff;
+  font-weight: bold;
 }
 
 .currency-wrap {
