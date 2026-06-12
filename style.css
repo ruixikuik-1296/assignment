@@ -389,7 +389,7 @@ canvas {
 
 /* Stats + Movers each card */
 .market-box {
-  padding: 15px;
+  padding: 10px;
   border-radius: 12px;
 
   background: rgba(20, 20, 30, 0.6);
@@ -401,7 +401,8 @@ canvas {
 /* headings */
 .market-box h3 {
   color: #00f5ff;
-  margin-bottom: 10px;
+  text-shadow: 0 0 10px #00f5ff;
+  padding-bottom: 10px;
 }
 
 .stats-grid {
