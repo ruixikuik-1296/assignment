@@ -23,8 +23,7 @@ function isVisible(id) {
     return el && !el.classList.contains("hidden");
 }
 
-// SAFE FETCH (IMPORTANT CORE)
-
+// SAFE FETCH
 async function safeFetch(url, retry = 2) {
     try {
         const res = await fetch(url);
@@ -575,7 +574,7 @@ async function loadMarketMovers() {
 
     container.innerHTML = "";
 
-    // 🔥 Gainers
+    // Gainers
     container.innerHTML += `<div class="mover-title gain">Top Gainers</div>`;
 
     topGainers.forEach(c => {
@@ -589,7 +588,7 @@ async function loadMarketMovers() {
         `;
     });
 
-    // 🔻 Losers
+    // Losers
     container.innerHTML += `<div class="mover-title loss">Top Losers</div>`;
 
     topLosers.forEach(c => {
@@ -782,12 +781,11 @@ function startAutoUpdate() {
             loadTopCoins();
         }
 
-        // 💼 PORTFOLIO auto refresh
         if (portfolioVisible) {
             renderPortfolio();
         }
 
-    }, 60000); // every 15 seconds
+    }, 60000); 
 }
 
 function updateCurrencyUI() {
