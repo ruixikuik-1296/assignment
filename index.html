@@ -22,6 +22,7 @@
 
     <button onclick="showSection('search')">Search</button>
     <button onclick="showSection('portfolio')">Portfolio</button>
+    <button onclick="showSection('market')">Market</button>
   </div>
 
   <!-- MAIN -->
@@ -30,16 +31,15 @@
     <!-- SEARCH VIEW -->
     <div id="search" class="section">
 
-      <h1>Crypto Price Checker</h1>
+      <h1>Crypto Price Dashboard</h1>
 
-      <!-- SEARCH BOX -->
+      <!-- SEARCH -->
       <div class="search-box">
         <input id="coin" placeholder="bitcoin / ethereum">
         <button onclick="getPrice()">Search</button>
       </div>
 
-      <!-- PRICE CARD -->
-        <!-- ROW 1: PRICE -->
+      <!-- PRICE INFO -->
       <div class="price-row">
         <span id="coinName"></span>
         <span>Currency:</span>
@@ -55,28 +55,38 @@
       </div>
 
       <div id="currencyBadge" class="currencyBadge"></div>
-      
-      <!-- RESULT BOX -->
+
       <div id="result" class="result-box"></div>
 
-      <div class="chart-container">
+      <!-- 🟦 MAIN CHART CARD -->
+      <div class="chart-container main-chart">
         <canvas id="chart"></canvas>
+        <div id="annotationText"></div>
       </div>
 
-      <button onclick="resetZoom()" style="margin-top:8px;">Reset zoom</button>
+      <button onclick="resetZoom()" style="margin-top:8px;">
+        Reset zoom
+      </button>
+
+      <!-- 🟪 INDICATOR CHART CARD -->
+      <h3>Technical Indicators</h3>
+      <div class="chart-container indicator-chart">
+        <canvas id="indicatorChart"></canvas>
+      </div>
 
     </div>
 
-    <!-- PORTFOLIO VIEW -->
+    <!-- PORTFOLIO VIEW (UNCHANGED) -->
     <div id="portfolio" class="section hidden">
-      <div>
-      <h1>My Portfolio</h1>
 
-      <input id="pCoin" placeholder="coin (bitcoin)">
-      <input id="pAmount" placeholder="amount">
-      <input id="pBuyPrice" placeholder="buy price (per coin in USD)">
+      <div>
+        <h1>My Portfolio</h1>
+
+        <input id="pCoin" placeholder="coin (bitcoin)">
+        <input id="pAmount" placeholder="amount">
+        <input id="pBuyPrice" placeholder="buy price (per coin in USD)">
       </div>
-      
+
       <div class="currency-panel">
         <span>Currency:</span>
         <select id="portfolioCurrencySelect">
@@ -93,8 +103,35 @@
 
     </div>
 
-  
+    <div id="market" class="section hidden">
+      <h1>Market Overview</h1>
+      <div class="market-grid">
+    <!-- LEFT -->
+      <div class="market-content">
+        <div class="status-bar">
+          <div id="marketSentiment"></div>
+          <div id="lastUpdated"></div>
+        </div>
+        <div class="market-box">
+          <h3>Stats</h3>
+          <div id="globalMarket" class="stats-grid"></div>
+        </div>
 
+        <div class="market-box">
+          <h3>Market Movers</h3>
+          <div id="marketMovers"></div>
+        </div>
+
+        <div id="marketSentiment" class="sentiment"></div>
+      </div>
+
+    <!-- RIGHT -->
+      <div class="market-box">
+        <h3>Top Coins</h3>
+        <div id="topCoins"></div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- MODAL -->

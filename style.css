@@ -14,6 +14,21 @@ h1, h2 {
   text-shadow: 0 0 10px #00f5ff;
 }
 
+h3 {
+  color: #00f5ff;
+  text-shadow: 0 0 10px #00f5ff;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 10px;  
+  font-weight: bold;
+  background: #111;
+  box-shadow: 0 0 10px rgba(0,255,255,0.2);
+  width: 100%;
+  max-width: 500px;
+  margin: 30px auto;
+  position: relative;
+}
+
 /* SEARCH BOX */
 .search-box {
   display: flex;
@@ -76,10 +91,9 @@ button:hover {
   justify-content: center;
   align-items: center;
   gap: 8px;
-  flex-wrap: wrap; /* 防止挤爆 */
+  flex-wrap: wrap;
 }
 
-/* 只保护 dropdown */
 .currency-wrap {
   display: flex;
   align-items: center;
@@ -97,6 +111,12 @@ button:hover {
 }
 
 /* canvas */
+:root {
+    --chart-price-color: #00f5ff;
+    --chart-sma-color:   #ff6384;
+    --chart-pred-color:  #ff9f40;
+}
+
 #chart {
   width: 100%;
   height: 100%;
@@ -104,6 +124,7 @@ button:hover {
 
 /* CHART */
 .chart-container {
+  background: #161a22;
   width: 100%;
   max-width: 800px;
   height: 380px;
@@ -115,6 +136,10 @@ canvas {
   width: 100% !important;
   height: 100% !important;
   display: block;
+}
+
+@media (max-width: 768px) {
+    .chart-container { height: 260px; }
 }
 
 /* MODAL */
@@ -262,7 +287,7 @@ canvas {
   gap: 12px;
 }
 
-/* 第一行：coin + price */
+/* coin + price */
 .result-row {
   display: flex;
   justify-content: center;
@@ -271,7 +296,7 @@ canvas {
   font-size: 18px;
 }
 
-/* 第二行：currency */
+/* currency */
 .currency-row {
   display: flex;
   justify-content: center;
@@ -340,6 +365,163 @@ canvas {
   transform: scale(1.03);
 }
 
+.status-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-top: 12px;
+  padding: 8px 12px;
+
+  border-radius: 8px;
+
+  background: rgba(20, 20, 30, 0.5);
+  border: 1px solid rgba(0, 245, 255, 0.2);
+
+  color: #00f5ff;
+  font-size: 13px;
+}
+
+#marketSentiment {
+  font-weight: bold;
+}
+
+.market-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.market-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Stats + Movers each card */
+.market-box {
+  padding: 15px;
+  border-radius: 12px;
+
+  background: rgba(20, 20, 30, 0.6);
+  border: 1px solid rgba(0, 245, 255, 0.15);
+
+  box-shadow: 0 0 15px rgba(0, 245, 255, 0.05);
+}
+
+/* headings */
+.market-box h3 {
+  color: #00f5ff;
+  margin-bottom: 10px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.stat-card {
+  padding: 12px;
+  border-radius: 10px;
+
+  background: rgba(20, 20, 30, 0.7);
+  border: 1px solid rgba(0, 245, 255, 0.15);
+
+  box-shadow: 0 0 10px rgba(0, 245, 255, 0.05);
+  text-align: center;
+
+  transition: 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: scale(1.03);
+  border-color: rgba(0, 245, 255, 0.4);
+}
+
+.stat-value {
+  font-size: 16px;
+  font-weight: bold;
+  color: #00f5ff;
+}
+
+.stat-label {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+#marketMovers {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mover-item {
+  display: flex;
+  justify-content: space-between;
+
+  padding: 8px 10px;
+  border-radius: 8px;
+
+  background: rgba(20, 20, 30, 0.5);
+  border: 1px solid rgba(0, 245, 255, 0.1);
+}
+
+.coin-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 10px 14px;
+  margin: 8px 0;
+
+  border-radius: 10px;
+
+  background: rgba(20, 20, 30, 0.6);
+  border: 1px solid rgba(0, 245, 255, 0.15);
+
+  box-shadow: 0 0 10px rgba(0, 245, 255, 0.05);
+
+  transition: 0.2s ease;
+}
+
+.coin-card:hover {
+  transform: scale(1.02);
+  border-color: rgba(0, 245, 255, 0.4);
+}
+
+.profit {
+  color: lime;
+  text-shadow: 0 0 10px rgba(0, 255, 0, 0.6);
+  font-weight: bold;
+}
+
+.loss {
+  color: #ff4d4d;
+  text-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
+  font-weight: bold;
+}
+
+.mover-title {
+  font-weight: bold;
+  margin: 6px 0;
+  letter-spacing: 0.5px;
+}
+
+.gain {
+  color: lime;
+  text-shadow: 0 0 10px rgba(0,255,0,0.5);
+}
+
+.loss {
+  color: #ff4d4d;
+  text-shadow: 0 0 10px rgba(255,0,0,0.5);
+}
+
 @media (max-width: 768px) {
 
   body {
@@ -369,7 +551,11 @@ canvas {
   }
 
   .chart-container {
-    height: 260px; /* ⭐ mobile 限高 */
+    height: 260px; 
+  }
+
+  .market-grid {
+    grid-template-columns: 1fr;
   }
 
   .sidebar {
